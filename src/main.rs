@@ -9,6 +9,10 @@ fn main() {
     count_intersections(chords);
 }
 
+// Driver for testing and input
+fn how_many_intersections(list_of_chords: (Vec<f32>, Vec<String>)) -> i32{
+    count_intersections(connect_chords(&list_of_chords.0, &list_of_chords.1))
+}
 
 fn count_intersections(chords: Vec<(&f32, &f32)>) -> i32 {
     // Store for the final count of intersections
@@ -77,10 +81,12 @@ fn connect_chords<'a>(point_rads: &'a Vec<f32>, point_ids: &'a Vec<String>) -> V
     chords
 }
 
-// #[test]
-// fn unit_test(){
-//     assert_eq!(intersecting_chords(), 0);
-// }
+#[test]
+fn unit_test(){
+    let rads = vec![0.28, 0.73, 1.12, 1.47, 1.77, 3.92];
+    let ids = vec![String::from("s1"), String::from("e1"), String::from("s2"), String::from("e2"), String::from("s3"), String::from("e3")];
+    assert_eq!(how_many_intersections((rads, ids)), 0);
+}
 
 // fn intersecting_chords_tuple(point_rads: &Vec<f32>, point_ids: &Vec<String>) -> i32{
 //
