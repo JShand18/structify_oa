@@ -18,7 +18,7 @@ cd /my/path/to/structify_oa
 
 5) Run `main.rs` with `cargo run` to ensure compiler is wokring, then add `-- -a` flag with the list of radian measurements and identifers
 ```
-cargo run -- -a [(0.78, 1.47, 1.77, 3.92), ("s1", "s2", "e1", "e2")]
+cargo run -- -a '[(0.78, 1.47, 1.77, 3.92), ("s1", "s2", "e1", "e2")]'
 ```
 
 6) Run tests from test suite in `main.rs`
