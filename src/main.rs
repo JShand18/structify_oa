@@ -1,11 +1,35 @@
 use std::collections::HashMap;
+use std::env;
 
 fn main() {
-    let rads = vec![0.28, 0.73, 1.12, 1.47, 1.84, 2.14, 2.77, 3.92];
-    let ids = vec![String::from("s1"), String::from("s2"), String::from("s3"), String::from("s4"), String::from("e1"),
-                    String::from("e2"), String::from("e3"), String::from("e4")];
-
+    let args: Vec<String> = env::args().collect();
+    let (rads, ids) = parse_config(&args);
     println!("{} Intersections", how_many_intersections((rads, ids)));
+}
+
+fn parse_config(args: &[String]) -> (Vec<f32>, Vec<String>){
+    // Initialize empty vectors to store radians and identifiers
+    let mut rads: Vec<f32> = Vec::new();
+    let mut ids: Vec<String> = Vec::new();
+
+    // -a: expecting a full list of radian measurements and identifiers
+    if args[1] == String::from("-a") {
+        // Stripping the argument of enclosing brackets and comma separators
+        let data: Vec<&str> = args[2].split(&['[', '(', ',', ')', ']' ][..]).collect();
+        for d in data{
+            let d = d.trim(); // Trim surrounding whitespace
+            // only looking to process radians and ids, not whitespaces
+            if d != String::from(" ") && d != String::from(""){
+                // cleaning and processing identifiers
+                if d[0..1] == String::from("\""){
+                    ids.push(String::from(d.trim_matches('\"')));
+                } else{
+                    rads.push(d.parse::<f32>().unwrap()); // converting radians to float type
+                }
+            }
+        }
+    }
+    (rads, ids)
 }
 
 fn how_many_intersections(list_of_chords: (Vec<f32>, Vec<String>)) -> i32{
