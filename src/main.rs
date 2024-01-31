@@ -7,31 +7,6 @@ fn main() {
     println!("{} Intersections", how_many_intersections((rads, ids)));
 }
 
-fn parse_config(args: &[String]) -> (Vec<f32>, Vec<String>){
-    // Initialize empty vectors to store radians and identifiers
-    let mut rads: Vec<f32> = Vec::new();
-    let mut ids: Vec<String> = Vec::new();
-
-    // -a: expecting a full list of radian measurements and identifiers
-    if args[1] == String::from("-a") {
-        // Stripping the argument of enclosing brackets and comma separators
-        let data: Vec<&str> = args[2].split(&['[', '(', ',', ')', ']' ][..]).collect();
-        for d in data{
-            let d = d.trim(); // Trim surrounding whitespace
-            // only looking to process radians and ids, not whitespaces
-            if d != String::from(" ") && d != String::from(""){
-                // cleaning and processing identifiers
-                if d[0..1] == String::from("\""){
-                    ids.push(String::from(d.trim_matches('\"')));
-                } else{
-                    rads.push(d.parse::<f32>().unwrap()); // converting radians to float type
-                }
-            }
-        }
-    }
-    (rads, ids)
-}
-
 fn how_many_intersections(list_of_chords: (Vec<f32>, Vec<String>)) -> i32{
     if list_of_chords.0.len() != list_of_chords.1.len() { // Not accepting lists of different sizes
         -1
@@ -97,9 +72,34 @@ fn connect_chords<'a>(point_rads: &'a Vec<f32>, point_ids: &'a Vec<String>) -> V
 }
 
 
+// Command Line Input Parser ------------------------
 
+fn parse_config(args: &[String]) -> (Vec<f32>, Vec<String>){
+    // Initialize empty vectors to store radians and identifiers
+    let mut rads: Vec<f32> = Vec::new();
+    let mut ids: Vec<String> = Vec::new();
 
-// TESTING SUITE
+    // -a: expecting a full list of radian measurements and identifiers, if not return empty vectors
+    if args[1] == String::from("-a") {
+        // Stripping the argument of enclosing brackets and comma separators
+        let data: Vec<&str> = args[2].split(&['[', '(', ',', ')', ']' ][..]).collect();
+        for d in data{
+            let d = d.trim(); // Trim surrounding whitespace
+            // only looking to process radians and ids, not whitespaces
+            if d != String::from(" ") && d != String::from(""){
+                // cleaning and processing identifiers
+                if d[0..1] == String::from("\""){
+                    ids.push(String::from(d.trim_matches('\"')));
+                } else{
+                    rads.push(d.parse::<f32>().unwrap()); // converting radians to float type
+                }
+            }
+        }
+    }
+    (rads, ids)
+}
+
+// Testing Suite -------------------------
 #[test]
 fn single_chord(){
     let rads = vec![0.9, 1.7];
